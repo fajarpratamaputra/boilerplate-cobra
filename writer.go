@@ -12,4 +12,5 @@ func newDatabase() database {
 }
 
 func (r *redis) writeLineup(lineup *map[int]int) {
+	// write to redis
 }

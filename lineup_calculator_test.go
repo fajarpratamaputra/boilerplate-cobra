@@ -18,6 +18,7 @@ var (
 		{2, 2, "like"},
 		{1, 2, "view"},
 		{1, 3, "like"},
+		{1, 3, "share"},
 	}
 )
 
@@ -25,9 +26,9 @@ func Test_lineupCalculator_calculate(t *testing.T) {
 	lc := newCalculator()
 	result := lc.calculate(contents, userInteractions)
 
-	expected := &map[int]int{
-		1: 3,
-		2: 1,
+	expected := &map[int]float64{
+		1: 6.0,
+		2: 2.0,
 	}
 
 	assert.NotNil(t, result)
