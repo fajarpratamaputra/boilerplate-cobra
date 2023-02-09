@@ -1,4 +1,4 @@
-module topraking-svc
+module top-ranking-worker
 
 go 1.18
 

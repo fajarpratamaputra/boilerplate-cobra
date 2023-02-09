@@ -1,19 +1,20 @@
-package main
+package lineup
 
 import (
 	"github.com/stretchr/testify/assert"
 	"testing"
+	"top-ranking-worker/lineup/domain"
 )
 
 var (
-	contents = []content{
+	contents = []domain.Content{
 		{1, "title1"},
 		{2, "title2"},
 		{3, "title3"},
 		{4, "title4"},
 	}
 
-	userInteractions = []interaction{
+	userInteractions = []domain.Interaction{
 		{1, 1, "comment", "hot"},
 		{2, 2, "love", "hot"},
 		{1, 2, "view", "news"},
@@ -24,7 +25,7 @@ var (
 
 func Test_lineupCalculator_calculate(t *testing.T) {
 	lc := newCalculator()
-	result := lc.calculate(contents, userInteractions)
+	result := lc.Calculate(contents, userInteractions)
 
 	expected := &map[int]float64{
 		1: 8.0,
