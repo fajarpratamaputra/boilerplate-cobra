@@ -1,13 +1,14 @@
 package basic
 
 import (
+	"context"
 	"top-ranking-worker/lineup/domain"
 )
 
 type Calculator struct {
 }
 
-func (lc *Calculator) Calculate(contents []domain.Content, interactions []domain.Interaction) (*map[int]float64, error) {
+func (lc *Calculator) Calculate(ctx context.Context, contents []domain.Content, interactions []domain.Interaction) (*map[int]float64, error) {
 	lineupRanking := map[int]float64{}
 
 	for _, interaction := range interactions {
