@@ -14,7 +14,7 @@ type MongoDatabase struct {
 }
 
 func NewMongoDatabase() (*MongoDatabase, error) {
-	md := &MongoDatabase{}
+	md := new(MongoDatabase)
 	if _, err := md.openClient(""); err != nil {
 		return nil, err
 	}

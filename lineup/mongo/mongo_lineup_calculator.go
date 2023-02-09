@@ -4,8 +4,8 @@ import (
 	"context"
 	"go.mongodb.org/mongo-driver/bson"
 	"log"
+	"top-ranking-worker/infra"
 	"top-ranking-worker/lineup/domain"
-	"top-ranking-worker/lineup/infra"
 )
 
 type Calculator struct {

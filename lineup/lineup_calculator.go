@@ -2,9 +2,9 @@ package lineup
 
 import (
 	"context"
+	"top-ranking-worker/infra"
 	"top-ranking-worker/lineup/basic"
 	"top-ranking-worker/lineup/domain"
-	"top-ranking-worker/lineup/infra"
 	"top-ranking-worker/lineup/mongo"
 )
 
