@@ -7,8 +7,9 @@ type (
 	}
 
 	interaction struct {
-		contentId    int
-		userId       int
-		behaviorType string
+		contentId int
+		userId    int
+		action    string
+		service   string
 	}
 )

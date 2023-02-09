@@ -19,14 +19,14 @@ type basicCalculator struct {
 func (lc *basicCalculator) calculate(contents []content, interactions []interaction) *map[int]float64 {
 	lineup := map[int]float64{}
 
-	var score float64
-
 	for _, interaction := range interactions {
-		switch interaction.behaviorType {
+		var score float64
+
+		switch interaction.action {
 		case "view":
 			score += ViewScale
 			break
-		case "like":
+		case "love":
 			score += LoveScale
 			break
 		case "comment":
