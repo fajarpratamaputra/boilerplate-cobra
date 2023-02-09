@@ -1,4 +1,4 @@
-package lineup
+package basic
 
 import (
 	"github.com/stretchr/testify/assert"
@@ -25,7 +25,7 @@ var (
 
 func Test_lineupCalculator_calculate(t *testing.T) {
 	lc := newCalculator()
-	result, err := lc.Calculate(contents, userInteractions)
+	result, err := lc.Calculate(nil, contents, userInteractions)
 	assert.Nil(t, err)
 
 	expected := &map[int]float64{
