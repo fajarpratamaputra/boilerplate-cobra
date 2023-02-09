@@ -7,7 +7,7 @@ import (
 type Calculator struct {
 }
 
-func (lc *Calculator) Calculate(contents []domain.Content, interactions []domain.Interaction) *map[int]float64 {
+func (lc *Calculator) Calculate(contents []domain.Content, interactions []domain.Interaction) (*map[int]float64, error) {
 	lineupRanking := map[int]float64{}
 
 	for _, interaction := range interactions {
@@ -31,5 +31,5 @@ func (lc *Calculator) Calculate(contents []domain.Content, interactions []domain
 		lineupRanking[interaction.ContentId] += score
 	}
 
-	return &lineupRanking
+	return &lineupRanking, nil
 }

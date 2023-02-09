@@ -6,7 +6,7 @@ import (
 )
 
 type Calculator interface {
-	Calculate(contents []domain.Content, interactions []domain.Interaction) *map[int]float64
+	Calculate(contents []domain.Content, interactions []domain.Interaction) (*map[int]float64, error)
 }
 
 func newCalculator() Calculator {

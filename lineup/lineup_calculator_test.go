@@ -25,7 +25,8 @@ var (
 
 func Test_lineupCalculator_calculate(t *testing.T) {
 	lc := newCalculator()
-	result := lc.Calculate(contents, userInteractions)
+	result, err := lc.Calculate(contents, userInteractions)
+	assert.Nil(t, err)
 
 	expected := &map[int]float64{
 		1: 8.0,

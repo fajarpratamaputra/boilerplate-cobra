@@ -7,6 +7,6 @@ import (
 type Calculator struct {
 }
 
-func (lc *Calculator) Calculate(contents []domain.Content, interactions []domain.Interaction) *map[int]float64 {
-	return nil
+func (lc *Calculator) Calculate(contents []domain.Content, interactions []domain.Interaction) (*map[int]float64, error) {
+	return nil, nil
 }
