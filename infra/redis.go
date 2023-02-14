@@ -3,6 +3,7 @@ package infra
 import (
 	"context"
 	"github.com/redis/go-redis/v9"
+	"time"
 )
 
 type RedisDatabase struct {
@@ -25,8 +26,8 @@ func (r *RedisDatabase) Get(ctx context.Context, key string) (string, error) {
 	return r.client.Get(ctx, key).Result()
 }
 
-func (r *RedisDatabase) Set(ctx context.Context, key string, value string) error {
-	return r.client.Set(ctx, key, value, 0).Err()
+func (r *RedisDatabase) Set(ctx context.Context, key string, value string, ttl time.Duration) error {
+	return r.client.Set(ctx, key, value, ttl).Err()
 }
 
 func (r *RedisDatabase) Close() error {
