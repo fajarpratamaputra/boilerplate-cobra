@@ -2,43 +2,28 @@ package mongo
 
 import (
 	"context"
-	"reflect"
+	"github.com/stretchr/testify/assert"
 	"testing"
 	"top-ranking-worker/infra"
-	"top-ranking-worker/lineup/domain"
+)
+
+var (
+	ctx = context.Background()
 )
 
 func TestCalculator_Calculate(t *testing.T) {
-	type fields struct {
-		Database *infra.MongoDatabase
+	m, err := infra.NewMongoDatabase(ctx)
+	assert.Nil(t, err)
+
+	cal := Calculator{Database: m}
+
+	result, err := cal.Calculate(ctx, nil, nil)
+	assert.Nil(t, err)
+
+	expected := &map[int]float64{
+		189321: 4,
 	}
-	type args struct {
-		ctx          context.Context
-		contents     []domain.Content
-		interactions []domain.Interaction
-	}
-	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		want    *map[int]float64
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			lc := &Calculator{
-				Database: tt.fields.Database,
-			}
-			got, err := lc.Calculate(tt.args.ctx, tt.args.contents, tt.args.interactions)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Calculate() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Calculate() got = %v, want %v", got, tt.want)
-			}
-		})
-	}
+
+	assert.NotNil(t, result)
+	assert.Equal(t, expected, result)
 }

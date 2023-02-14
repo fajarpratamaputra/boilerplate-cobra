@@ -17,7 +17,7 @@ func newCalculator() Calculator {
 }
 
 func newMongoCalculator() Calculator {
-	mongoDb, err := infra.NewMongoDatabase()
+	mongoDb, err := infra.NewMongoDatabase(context.TODO())
 	if err != nil {
 		return nil
 	}
