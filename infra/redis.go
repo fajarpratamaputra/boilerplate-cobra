@@ -2,6 +2,7 @@ package infra
 
 import (
 	"context"
+	"encoding/json"
 	"github.com/redis/go-redis/v9"
 	"time"
 )
@@ -14,7 +15,7 @@ func NewRedisDatabase() (*RedisDatabase, error) {
 	client := new(RedisDatabase)
 
 	client.client = redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
+		Addr:     "127.0.0.1:6379",
 		Password: "", // no password set
 		DB:       0,  // use default DB
 	})
@@ -26,8 +27,13 @@ func (r *RedisDatabase) Get(ctx context.Context, key string) (string, error) {
 	return r.client.Get(ctx, key).Result()
 }
 
-func (r *RedisDatabase) Set(ctx context.Context, key string, value string, ttl time.Duration) error {
-	return r.client.Set(ctx, key, value, ttl).Err()
+func (r *RedisDatabase) Set(ctx context.Context, key string, value interface{}, ttl time.Duration) error {
+	val, err := json.Marshal(value)
+	if err != nil {
+		return err
+	}
+
+	return r.client.Set(ctx, key, val, ttl).Err()
 }
 
 func (r *RedisDatabase) Close() error {

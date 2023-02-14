@@ -46,7 +46,6 @@ func (lc *Calculator) calculateThings(ctx context.Context, curr *md.Cursor) (*ma
 		}
 
 		lineup[result.ContentID] += score
-
 	}
 
 	return &lineup, nil
