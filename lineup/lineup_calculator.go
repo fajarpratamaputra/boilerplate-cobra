@@ -8,7 +8,7 @@ import (
 )
 
 type Calculator interface {
-	Calculate(ctx context.Context, contents []domain.Content, interactions []domain.Interaction) (*map[int]float64, error)
+	Calculate(ctx context.Context, contents []domain.Content, interactions []domain.LineupContent) (domain.LineupMap, error)
 }
 
 func NewCalculator() Calculator {

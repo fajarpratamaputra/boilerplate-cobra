@@ -9,18 +9,21 @@ import (
 	"top-ranking-worker/lineup/domain/mongo"
 )
 
+// Calculator is a struct that contains the database
 type Calculator struct {
 	Database *infra.MongoDatabase
 }
 
+// openCursor opens a cursor to the collection
 func (lc *Calculator) openCursor(ctx context.Context, collectionName string) (*md.Cursor, error) {
 	coll := lc.Database.GetCollection("interactions", collectionName)
 
 	return coll.Find(ctx, bson.D{})
 }
 
-func (lc *Calculator) calculateThings(ctx context.Context, curr *md.Cursor) (*map[int]float64, error) {
-	var lineup = make(map[int]float64)
+// calculateThings calculates the score for each content
+func (lc *Calculator) calculateThings(ctx context.Context, curr *md.Cursor) (domain.LineupMap, error) {
+	l := make(domain.LineupMap)
 
 	for curr.Next(ctx) {
 		var result mongo.InteractionModel
@@ -31,7 +34,7 @@ func (lc *Calculator) calculateThings(ctx context.Context, curr *md.Cursor) (*ma
 		var score float64
 
 		switch result.Action {
-		case "view":
+		case "views":
 			score += domain.ViewScale
 			break
 		case "like":
@@ -45,17 +48,54 @@ func (lc *Calculator) calculateThings(ctx context.Context, curr *md.Cursor) (*ma
 			break
 		}
 
-		lineup[result.ContentID] += score
+		content := &domain.LineupContent{
+			Service:     result.Service,
+			ContentType: result.ContentType,
+			Score:       score,
+		}
+
+		l[result.ContentID] = content
 	}
 
-	return &lineup, nil
+	return l, nil
 }
 
-func (lc *Calculator) Calculate(ctx context.Context, contents []domain.Content, interactions []domain.Interaction) (*map[int]float64, error) {
-	curr, err := lc.openCursor(ctx, "likes")
+// calculateScore is a helper function to calculate the score for each content
+func (lc *Calculator) calculateScore(ctx context.Context, collectionName string) (domain.LineupMap, error) {
+	curr, err := lc.openCursor(ctx, collectionName)
 	if err != nil {
 		return nil, err
 	}
 
-	return lc.calculateThings(ctx, curr)
+	results, err := lc.calculateThings(ctx, curr)
+	if err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+// Calculate calculates the score for each content
+func (lc *Calculator) Calculate(ctx context.Context, contents []domain.Content, interactions []domain.LineupContent) (domain.LineupMap, error) {
+	likesResults, err := lc.calculateScore(ctx, "likes")
+	if err != nil {
+		return nil, err
+	}
+
+	viewResults, err := lc.calculateScore(ctx, "views")
+	if err != nil {
+		return nil, err
+	}
+
+	for i, likeResult := range likesResults {
+		_, isExist := viewResults[i]
+		if isExist {
+			viewResults[i].Score += likeResult.Score
+			continue
+		}
+
+		viewResults[i] = likeResult
+	}
+
+	return viewResults, nil
 }

@@ -2,7 +2,9 @@ package mongo
 
 type (
 	InteractionModel struct {
-		ContentID int    `bson:"contentid"`
-		Action    string `bson:"action"`
+		ContentID   int
+		Action      string
+		ContentType string
+		Service     string
 	}
 )

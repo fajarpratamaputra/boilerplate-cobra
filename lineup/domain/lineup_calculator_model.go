@@ -6,10 +6,12 @@ type (
 		Title     string
 	}
 
-	Interaction struct {
-		ContentId int
-		UserId    int
-		Action    string
-		Service   string
+	LineupContent struct {
+		ContentId   int
+		Service     string
+		ContentType string
+		Score       float64
 	}
+
+	LineupMap map[interface{}]*LineupContent
 )

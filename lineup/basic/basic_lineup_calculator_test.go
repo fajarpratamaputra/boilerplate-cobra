@@ -14,7 +14,7 @@ var (
 		{4, "title4"},
 	}
 
-	userInteractions = []domain.Interaction{
+	userInteractions = []domain.LineupContent{
 		{1, 1, "comment", "hot"},
 		{2, 2, "love", "hot"},
 		{1, 2, "view", "news"},

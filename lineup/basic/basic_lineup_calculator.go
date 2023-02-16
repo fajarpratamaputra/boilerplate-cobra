@@ -12,7 +12,7 @@ func newCalculator() *Calculator {
 	return &Calculator{}
 }
 
-func (lc *Calculator) Calculate(ctx context.Context, contents []domain.Content, interactions []domain.Interaction) (*map[int]float64, error) {
+func (lc *Calculator) Calculate(ctx context.Context, contents []domain.Content, interactions []domain.LineupContent) (*map[int]float64, error) {
 	lineupRanking := map[int]float64{}
 
 	for _, interaction := range interactions {
