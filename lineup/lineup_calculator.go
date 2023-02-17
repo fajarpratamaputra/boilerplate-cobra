@@ -17,5 +17,5 @@ func NewCalculator() Calculator {
 		return nil
 	}
 
-	return &mongo.Calculator{Database: mongoDb}
+	return &mongo.Calculator{MongoDatabase: mongoDb}
 }

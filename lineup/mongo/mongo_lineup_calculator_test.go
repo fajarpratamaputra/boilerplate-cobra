@@ -17,7 +17,7 @@ func TestCalculator_Calculate(t *testing.T) {
 	m, err := infra.NewMongoDatabase(ctx)
 	assert.Nil(t, err)
 
-	cal := Calculator{Database: m}
+	cal := Calculator{MongoDatabase: m}
 
 	result, err := cal.Calculate(ctx, nil, nil)
 	assert.Nil(t, err)

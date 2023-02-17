@@ -15,10 +15,8 @@ func calculate(ctx context.Context) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	res := lineup.ToLineup(results)
-
-	if err = wrt.Write(ctx, res); err != nil {
+	
+	if err = wrt.Write(ctx, results); err != nil {
 		log.Fatal(err)
 	}
 }

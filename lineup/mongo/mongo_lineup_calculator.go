@@ -11,12 +11,12 @@ import (
 
 // Calculator is a struct that contains the database
 type Calculator struct {
-	Database *infra.MongoDatabase
+	MongoDatabase *infra.MongoDatabase
 }
 
 // openCursor opens a cursor to the collection
 func (lc *Calculator) openCursor(ctx context.Context, collectionName string) (*md.Cursor, error) {
-	coll := lc.Database.GetCollection("interactions", collectionName)
+	coll := lc.MongoDatabase.GetCollection("interactions", collectionName)
 
 	return coll.Find(ctx, bson.D{})
 }
