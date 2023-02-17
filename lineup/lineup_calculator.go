@@ -8,14 +8,39 @@ import (
 )
 
 type Calculator interface {
-	Calculate(ctx context.Context, contents []domain.Content, interactions []domain.LineupContent) (domain.LineupMap, error)
+	Calculate(ctx context.Context, name string, filter map[string]interface{}) (*domain.LineupMap, error)
 }
 
-func NewCalculator() Calculator {
-	mongoDb, err := infra.NewMongoDatabase(context.TODO())
-	if err != nil {
-		return nil
+func Summarize(ctx context.Context, mongoDb *infra.MongoDatabase) (*domain.LineupMap, error) {
+	filter := map[string]interface{}{
+		"service": "hot",
 	}
 
-	return &mongo.Calculator{MongoDatabase: mongoDb}
+	lr := mongo.NewCalculator(mongoDb)
+
+	likesResults, err := lr.Calculate(ctx, "likes", filter)
+	if err != nil {
+		return nil, err
+	}
+
+	viewResults, err := lr.Calculate(ctx, "views", filter)
+	if err != nil {
+		return nil, err
+	}
+
+	if likesResults == nil {
+		return viewResults, nil
+	}
+
+	for i, likeResult := range *likesResults {
+		_, isExist := (*viewResults)[i]
+		if isExist {
+			(*viewResults)[i].Score += likeResult.Score
+			continue
+		}
+
+		(*viewResults)[i] = likeResult
+	}
+
+	return viewResults, nil
 }

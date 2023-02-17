@@ -8,7 +8,7 @@ import (
 )
 
 type Writer interface {
-	Write(ctx context.Context, lineup interface{}) error
+	Write(ctx context.Context, key string, lineup interface{}) error
 }
 
 func NewWriter() Writer {

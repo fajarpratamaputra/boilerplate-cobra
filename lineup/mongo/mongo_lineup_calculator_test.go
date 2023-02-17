@@ -17,29 +17,17 @@ func TestCalculator_Calculate(t *testing.T) {
 	m, err := infra.NewMongoDatabase(ctx)
 	assert.Nil(t, err)
 
-	cal := Calculator{MongoDatabase: m}
+	cal := NewCalculator(m)
 
-	result, err := cal.Calculate(ctx, nil, nil)
+	result, err := cal.Calculate(ctx, "views", nil)
 	assert.Nil(t, err)
 
-	expected := domain.LineupMap{
+	expected := &domain.LineupMap{
 		123: &domain.LineupContent{
 			ContentId:   0,
 			Service:     "hot",
 			ContentType: "video",
-			Score:       3,
-		},
-		456: &domain.LineupContent{
-			ContentId:   0,
-			Service:     "hot",
-			ContentType: "video",
-			Score:       2,
-		},
-		789: &domain.LineupContent{
-			ContentId:   0,
-			Service:     "hot",
-			ContentType: "video",
-			Score:       2,
+			Score:       1,
 		},
 		1999: &domain.LineupContent{
 			ContentId:   0,

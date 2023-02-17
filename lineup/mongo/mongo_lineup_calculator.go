@@ -11,18 +11,27 @@ import (
 
 // Calculator is a struct that contains the database
 type Calculator struct {
-	MongoDatabase *infra.MongoDatabase
+	mongoDatabase *infra.MongoDatabase
+}
+
+func NewCalculator(infra *infra.MongoDatabase) *Calculator {
+	return &Calculator{mongoDatabase: infra}
 }
 
 // openCursor opens a cursor to the collection
-func (lc *Calculator) openCursor(ctx context.Context, collectionName string) (*md.Cursor, error) {
-	coll := lc.MongoDatabase.GetCollection("interactions", collectionName)
+func (lc *Calculator) openCursor(ctx context.Context, collectionName string, filter map[string]interface{}) (*md.Cursor, error) {
+	coll := lc.mongoDatabase.GetCollection("interactions", collectionName)
 
-	return coll.Find(ctx, bson.D{})
+	p := make(bson.M)
+	for k, v := range filter {
+		p[k] = v
+	}
+
+	return coll.Find(ctx, p)
 }
 
-// calculateThings calculates the score for each content
-func (lc *Calculator) calculateThings(ctx context.Context, curr *md.Cursor) (domain.LineupMap, error) {
+// calculateFromMongo calculates the score for each content
+func (lc *Calculator) calculateFromMongo(ctx context.Context, curr *md.Cursor) (*domain.LineupMap, error) {
 	l := make(domain.LineupMap)
 
 	for curr.Next(ctx) {
@@ -57,45 +66,24 @@ func (lc *Calculator) calculateThings(ctx context.Context, curr *md.Cursor) (dom
 		l[result.ContentID] = content
 	}
 
-	return l, nil
+	if len(l) == 0 {
+		return nil, nil
+	}
+
+	return &l, nil
 }
 
-// calculateScore is a helper function to calculate the score for each content
-func (lc *Calculator) calculateScore(ctx context.Context, collectionName string) (domain.LineupMap, error) {
-	curr, err := lc.openCursor(ctx, collectionName)
+// Calculate calculates the score for each content
+func (lc *Calculator) Calculate(ctx context.Context, name string, filter map[string]interface{}) (*domain.LineupMap, error) {
+	curr, err := lc.openCursor(ctx, name, filter)
 	if err != nil {
 		return nil, err
 	}
 
-	results, err := lc.calculateThings(ctx, curr)
+	results, err := lc.calculateFromMongo(ctx, curr)
 	if err != nil {
 		return nil, err
 	}
 
 	return results, nil
-}
-
-// Calculate calculates the score for each content
-func (lc *Calculator) Calculate(ctx context.Context, contents []domain.Content, interactions []domain.LineupContent) (domain.LineupMap, error) {
-	likesResults, err := lc.calculateScore(ctx, "likes")
-	if err != nil {
-		return nil, err
-	}
-
-	viewResults, err := lc.calculateScore(ctx, "views")
-	if err != nil {
-		return nil, err
-	}
-
-	for i, likeResult := range likesResults {
-		_, isExist := viewResults[i]
-		if isExist {
-			viewResults[i].Score += likeResult.Score
-			continue
-		}
-
-		viewResults[i] = likeResult
-	}
-
-	return viewResults, nil
 }

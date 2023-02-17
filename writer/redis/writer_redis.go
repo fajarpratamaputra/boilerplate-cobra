@@ -18,11 +18,11 @@ func NewWriter(c *infra.RedisDatabase) *Writer {
 }
 
 func convertLineupToPayload(lineup interface{}) []*domain.LineupPayload {
-	l := lineup.(domain.LineupMap)
+	l := lineup.(*domain.LineupMap)
 
 	var domainLineup []*domain.LineupPayload
 
-	for i, content := range l {
+	for i, content := range *l {
 		domainLineup = append(domainLineup, &domain.LineupPayload{
 			ContentId:   i,
 			Service:     content.Service,
@@ -33,10 +33,10 @@ func convertLineupToPayload(lineup interface{}) []*domain.LineupPayload {
 	return domainLineup
 }
 
-func (w *Writer) Write(ctx context.Context, lineup interface{}) error {
+func (w *Writer) Write(ctx context.Context, key string, lineup interface{}) error {
 	ttl := 24 * time.Hour
 
 	r := convertLineupToPayload(lineup)
 
-	return w.Client.Set(ctx, "shorts:master:top", r, ttl)
+	return w.Client.Set(ctx, key, r, ttl)
 }
