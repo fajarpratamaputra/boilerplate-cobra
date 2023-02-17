@@ -1,19 +1,29 @@
-package lineup
+package summarizer
 
 import (
 	"context"
 	"top-ranking-worker/infra"
+	"top-ranking-worker/lineup/calculator/mongo"
 	"top-ranking-worker/lineup/domain"
-	"top-ranking-worker/lineup/mongo"
 )
 
-type Calculator interface {
-	Calculate(ctx context.Context, name string, filter map[string]interface{}) (*domain.Lineup, error)
+type Summarizer interface {
+	Summarize(ctx context.Context, mongoDb *infra.MongoDatabase) (*domain.Lineup, error)
 }
 
-func Summarize(ctx context.Context, mongoDb *infra.MongoDatabase) (*domain.Lineup, error) {
-	filter := map[string]interface{}{
-		"service": "hot",
+type CalculatorSummarizer struct {
+}
+
+func NewCalculatorSummarizer() *CalculatorSummarizer {
+	return &CalculatorSummarizer{}
+}
+
+func (cs *CalculatorSummarizer) Summarize(ctx context.Context, menu string, mongoDb *infra.MongoDatabase) (*domain.Lineup, error) {
+	var filter map[string]interface{}
+	if menu != "fyp" {
+		filter = map[string]interface{}{
+			"service": menu,
+		}
 	}
 
 	lr := mongo.NewCalculator(mongoDb)

@@ -1,4 +1,4 @@
-package lineup
+package calculator
 
 import "sort"
 

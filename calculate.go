@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 	"top-ranking-worker/infra"
-	"top-ranking-worker/lineup"
+	"top-ranking-worker/lineup/summarizer"
 	"top-ranking-worker/writer"
 )
 
@@ -14,19 +14,29 @@ func calculate(ctx context.Context) {
 		log.Fatal(err)
 	}
 
-	results, err := lineup.Summarize(ctx, mongoDb)
-	if err != nil {
+	wrt := writer.NewWriter()
+
+	if err = calculatePerMenu(ctx, "fyp", wrt, mongoDb); err != nil {
 		log.Fatal(err)
+	}
+}
+
+func calculatePerMenu(ctx context.Context, menu string, wrt writer.Writer, mongoDb *infra.MongoDatabase) error {
+	sm := summarizer.NewCalculatorSummarizer()
+
+	results, err := sm.Summarize(ctx, menu, mongoDb)
+	if err != nil {
+		return err
 	}
 
 	if results == nil {
-		return
+		return nil
 	}
 
-	wrt := writer.NewWriter()
-
-	key := "shorts:master:top"
+	key := "shorts:master:" + menu
 	if err = wrt.Write(ctx, key, results); err != nil {
-		log.Fatal(err)
+		return err
 	}
+
+	return nil
 }
