@@ -22,14 +22,14 @@ func TestCalculator_Calculate(t *testing.T) {
 	result, err := cal.Calculate(ctx, "views", nil)
 	assert.Nil(t, err)
 
-	expected := &domain.LineupMap{
-		123: &domain.LineupContent{
+	expected := &domain.Lineup{
+		123: &domain.Content{
 			ContentId:   0,
 			Service:     "hot",
 			ContentType: "video",
 			Score:       1,
 		},
-		1999: &domain.LineupContent{
+		1999: &domain.Content{
 			ContentId:   0,
 			Service:     "hot",
 			ContentType: "video",

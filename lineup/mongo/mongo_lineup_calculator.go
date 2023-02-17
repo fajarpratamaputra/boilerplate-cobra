@@ -31,8 +31,8 @@ func (lc *Calculator) openCursor(ctx context.Context, collectionName string, fil
 }
 
 // calculateFromMongo calculates the score for each content
-func (lc *Calculator) calculateFromMongo(ctx context.Context, curr *md.Cursor) (*domain.LineupMap, error) {
-	l := make(domain.LineupMap)
+func (lc *Calculator) calculateFromMongo(ctx context.Context, curr *md.Cursor) (*domain.Lineup, error) {
+	l := make(domain.Lineup)
 
 	for curr.Next(ctx) {
 		var result mongo.InteractionModel
@@ -57,7 +57,7 @@ func (lc *Calculator) calculateFromMongo(ctx context.Context, curr *md.Cursor) (
 			break
 		}
 
-		content := &domain.LineupContent{
+		content := &domain.Content{
 			Service:     result.Service,
 			ContentType: result.ContentType,
 			Score:       score,
@@ -74,7 +74,7 @@ func (lc *Calculator) calculateFromMongo(ctx context.Context, curr *md.Cursor) (
 }
 
 // Calculate calculates the score for each content
-func (lc *Calculator) Calculate(ctx context.Context, name string, filter map[string]interface{}) (*domain.LineupMap, error) {
+func (lc *Calculator) Calculate(ctx context.Context, name string, filter map[string]interface{}) (*domain.Lineup, error) {
 	curr, err := lc.openCursor(ctx, name, filter)
 	if err != nil {
 		return nil, err

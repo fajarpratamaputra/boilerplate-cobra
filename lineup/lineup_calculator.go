@@ -8,10 +8,10 @@ import (
 )
 
 type Calculator interface {
-	Calculate(ctx context.Context, name string, filter map[string]interface{}) (*domain.LineupMap, error)
+	Calculate(ctx context.Context, name string, filter map[string]interface{}) (*domain.Lineup, error)
 }
 
-func Summarize(ctx context.Context, mongoDb *infra.MongoDatabase) (*domain.LineupMap, error) {
+func Summarize(ctx context.Context, mongoDb *infra.MongoDatabase) (*domain.Lineup, error) {
 	filter := map[string]interface{}{
 		"service": "hot",
 	}

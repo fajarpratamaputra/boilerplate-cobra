@@ -5,6 +5,7 @@ import (
 	"time"
 	"top-ranking-worker/infra"
 	"top-ranking-worker/lineup/domain"
+	redisDomain "top-ranking-worker/lineup/domain/redis"
 )
 
 type Writer struct {
@@ -17,13 +18,13 @@ func NewWriter(c *infra.RedisDatabase) *Writer {
 	}
 }
 
-func convertLineupToPayload(lineup interface{}) []*domain.LineupPayload {
-	l := lineup.(*domain.LineupMap)
+func convertLineupToPayload(lineup interface{}) []*redisDomain.LineupPayload {
+	l := lineup.(*domain.Lineup)
 
-	var domainLineup []*domain.LineupPayload
+	var domainLineup []*redisDomain.LineupPayload
 
 	for i, content := range *l {
-		domainLineup = append(domainLineup, &domain.LineupPayload{
+		domainLineup = append(domainLineup, &redisDomain.LineupPayload{
 			ContentId:   i,
 			Service:     content.Service,
 			ContentType: content.ContentType,
