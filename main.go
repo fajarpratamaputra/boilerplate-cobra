@@ -1,11 +1,11 @@
+/*
+Copyright © 2023 NAME HERE <EMAIL ADDRESS>
+
+*/
 package main
 
-import (
-	"context"
-)
+import "top-ranking-worker/cmd"
 
 func main() {
-	ctx := context.Background()
-
-	calculate(ctx)
+	cmd.Execute()
 }

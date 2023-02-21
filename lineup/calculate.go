@@ -1,24 +1,14 @@
-package main
+package lineup
 
 import (
 	"context"
-	"log"
 	"top-ranking-worker/infra"
 	"top-ranking-worker/lineup/summarizer"
 	"top-ranking-worker/writer"
 )
 
-func calculate(ctx context.Context) {
-	mongoDb, err := infra.NewMongoDatabase(ctx)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	wrt := writer.NewWriter()
-
-	if err = calculatePerMenu(ctx, "fyp", wrt, mongoDb); err != nil {
-		log.Fatal(err)
-	}
+func Calculate(ctx context.Context, wrt writer.Writer, mongoDb *infra.MongoDatabase, menu string) error {
+	return calculatePerMenu(ctx, menu, wrt, mongoDb)
 }
 
 func calculatePerMenu(ctx context.Context, menu string, wrt writer.Writer, mongoDb *infra.MongoDatabase) error {
