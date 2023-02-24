@@ -17,7 +17,7 @@ func NewRedisDatabase() (*RedisDatabase, error) {
 	client.client = redis.NewClient(&redis.Options{
 		Addr:     "127.0.0.1:6379",
 		Password: "", // no password set
-		DB:       0,  // use default DB
+		DB:       8,  // use default DB
 	})
 
 	return client, nil
@@ -42,4 +42,8 @@ func (r *RedisDatabase) Close() error {
 
 func (r *RedisDatabase) Ping(ctx context.Context) error {
 	return r.client.Ping(ctx).Err()
+}
+
+func (r *RedisDatabase) Keys(ctx context.Context, key string) ([]string, error) {
+	return r.client.Keys(ctx, key).Result()
 }

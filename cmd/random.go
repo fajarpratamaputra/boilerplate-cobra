@@ -1,13 +1,13 @@
 /*
 Copyright © 2023 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
-	"fmt"
-
+	"context"
 	"github.com/spf13/cobra"
+	"log"
+	"top-ranking-worker/lineup"
 )
 
 // randomCmd represents the random command
@@ -21,7 +21,12 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("random called")
+		ctx := context.Background()
+		menu := cmd.Flag("menu").Value.String()
+
+		if err := lineup.Random(ctx, menu); err != nil {
+			log.Fatal(err)
+		}
 	},
 }
 
@@ -33,6 +38,7 @@ func init() {
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
 	// randomCmd.PersistentFlags().String("foo", "", "A help for foo")
+	randomCmd.PersistentFlags().String("menu", "fyp", "Menu that need to be summarized")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
