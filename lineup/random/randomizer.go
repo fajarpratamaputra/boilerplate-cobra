@@ -59,9 +59,10 @@ func (cs *RandomizerStruct) Randomizer(ctx context.Context, menu string) ([]map[
 				} else {
 					contentType = arr[4]
 				}
+
 				jsonObj := map[string]interface{}{
 					"content_id":   content.ContentId,
-					"service":      menu,
+					"service":      arr[2],
 					"content_type": contentType,
 				}
 				slice = append(slice, jsonObj)
