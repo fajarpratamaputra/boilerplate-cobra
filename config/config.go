@@ -8,6 +8,7 @@ var DefaultConfig = map[string]interface{}{
 	"REDIS_HOST":     "127.0.0.1:6379",
 	"REDIS_PASSWORD": "",
 	"REDIS_DB":       8,
+	"MONGO_URL":      "mongodb://localhost:27017",
 }
 
 var Config config.Getter

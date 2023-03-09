@@ -3,6 +3,7 @@ package infra
 import (
 	"context"
 	"time"
+	"top-ranking-worker/config"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -15,7 +16,7 @@ type MongoDatabase struct {
 
 func NewMongoDatabase(ctx context.Context) (*MongoDatabase, error) {
 	md := new(MongoDatabase)
-	if _, err := md.openClient(ctx, "mongodb://localhost:27017"); err != nil {
+	if _, err := md.openClient(ctx, config.Config.GetString("MONGO_URL")); err != nil {
 		return nil, err
 	}
 
