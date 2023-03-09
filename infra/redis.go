@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"github.com/redis/go-redis/v9"
 	"time"
+	"top-ranking-worker/config"
 )
 
 type RedisDatabase struct {
@@ -15,9 +16,9 @@ func NewRedisDatabase() (*RedisDatabase, error) {
 	client := new(RedisDatabase)
 
 	client.client = redis.NewClient(&redis.Options{
-		Addr:     "127.0.0.1:6379",
-		Password: "Rcti+2019", // no password set
-		DB:       8,           // use default DB
+		Addr:     config.Config.GetString("REDIS_HOST"),
+		Password: config.Config.GetString("REDIS_PASSWORD"),
+		DB:       config.Config.GetInt("REDIS_DB"),
 	})
 
 	return client, nil

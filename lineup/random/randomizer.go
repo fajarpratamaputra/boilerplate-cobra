@@ -3,6 +3,7 @@ package randomizer
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"strings"
 	"top-ranking-worker/infra"
 	"top-ranking-worker/lineup/domain"
@@ -42,12 +43,17 @@ func (cs *RandomizerStruct) Randomizer(ctx context.Context, menu string) ([]map[
 		contentType := value[4]
 		contentId := value[5]
 
+		contentIdI, err := strconv.Atoi(contentId)
+		if err != nil {
+			panic(err)
+		}
+
 		if service == "news" || contentType == "clip" {
 			continue
 		}
 
 		jsonObj := map[string]interface{}{
-			"content_id":   contentId,
+			"content_id":   contentIdI,
 			"service":      service,
 			"content_type": contentType,
 		}
