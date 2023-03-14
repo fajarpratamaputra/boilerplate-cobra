@@ -4,6 +4,7 @@ import (
 	"context"
 	"go.mongodb.org/mongo-driver/bson"
 	md "go.mongodb.org/mongo-driver/mongo"
+	"top-ranking-worker/config"
 	"top-ranking-worker/infra"
 	"top-ranking-worker/lineup/domain"
 	"top-ranking-worker/lineup/domain/mongo"
@@ -20,7 +21,7 @@ func NewCalculator(infra *infra.MongoDatabase) *Calculator {
 
 // openCursor opens a cursor to the collection
 func (lc *Calculator) openCursor(ctx context.Context, collectionName string, filter map[string]interface{}) (*md.Cursor, error) {
-	coll := lc.mongoDatabase.GetCollection("interactions", collectionName)
+	coll := lc.mongoDatabase.GetCollection(config.Config.GetString("MONGO_DB"), collectionName)
 
 	p := make(bson.M)
 	for k, v := range filter {
@@ -33,7 +34,6 @@ func (lc *Calculator) openCursor(ctx context.Context, collectionName string, fil
 // calculateFromMongo calculates the score for each content
 func (lc *Calculator) calculateFromMongo(ctx context.Context, curr *md.Cursor) (*domain.Lineup, error) {
 	l := make(domain.Lineup)
-
 	for curr.Next(ctx) {
 		var result mongo.InteractionModel
 		if err := curr.Decode(&result); err != nil {
@@ -46,10 +46,10 @@ func (lc *Calculator) calculateFromMongo(ctx context.Context, curr *md.Cursor) (
 		case "views":
 			score += domain.ViewScale
 			break
-		case "like":
+		case "likes":
 			score += domain.LoveScale
 			break
-		case "comment":
+		case "comments":
 			score += domain.CommentScale
 			break
 		case "share":
