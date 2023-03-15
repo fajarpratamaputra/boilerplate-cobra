@@ -1,2 +1,3 @@
 config.json
-*.go
+/config/config.go
+config.go
